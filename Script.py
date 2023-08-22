@@ -1,100 +1,119 @@
+import re
+from os import environ
+
+id_pattern = re.compile(r'^.\d+$')
+def is_enabled(value, default):
+    if value.lower() in ["true", "yes", "1", "enable", "y"]:
+        return True
+    elif value.lower() in ["false", "no", "0", "disable", "n"]:
+        return False
+    else:
+        return default
+
 class script(object):
-    START_TXT = """<b>Hᴇʏ {} ɪᴍ 『 ᴍᴏᴠɪᴇs ғɪʟᴛᴇʀ ʙᴏᴛ 』 ᴀɴ Aᴡᴇsᴏᴍᴇ Aᴜᴛᴏ + Mᴀɴᴜᴀʟ Fɪʟᴛᴇʀ + Fɪʟᴇ Sʜᴀʀᴇ Bᴏᴛ.
-Aᴅᴅ Mᴇ Tᴏ Yᴏᴜʀ Gʀᴏᴜᴩ Nᴏᴡ 👇</b>"""
+    START_TXT = """<b>𝙃𝙚𝙮</b> {},
+<b>𝙄 𝘼𝙢<a href=https://t.me/{}>{}</a>, 𝙄 𝙒𝙞𝙡𝙡 𝙋𝙧𝙤𝙫𝙞𝙙𝙚 𝘼𝙣𝙞𝙢𝙚𝙨😉😍</b> \n \n <b>𝐁𝐨𝐭 𝐂𝐫𝐞𝐚𝐭𝐞𝐝 𝐁𝐲 :- @Animee_4u \n 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 :- @Animee_4u</b>"""
+    HELP_TXT = """𝙷𝙴𝚈 {}
+𝙷𝙴𝚁𝙴 𝙸𝚂 𝚃𝙷𝙴 𝙷𝙴𝙻𝙿 𝙵𝙾𝚁 𝙼𝚈 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂."""
+    ABOUT_TXT = """✯ 𝐁𝐨𝐭 𝐍𝐚𝐦𝐞: {}
+✯ 𝐂𝐫𝐞𝐚𝐭𝐨𝐫 <a href=https://telegram.me/Animee_4u><b>ANIMEE_4U</b></a>\n
+📝 ʟᴀɴɢᴜᴀɢᴇ : ᴘʏʀᴏɢʀᴀᴍ\n
+📡 ʜᴏsᴛᴇᴅ ᴏɴ : VPS\n
+📢 ᴜᴘᴅᴀᴛᴇs ᴄʜᴀɴɴᴇʟ : <a href=https://t.me/Animee_4u><b></b>ᴄʟɪᴄᴋ ʜᴇʀᴇ</a>\n
+🌟 ᴠᴇʀsɪᴏɴ : ᴠ 4.0\n</b></i>"""
+    SOURCE_TXT = """<b>𝐂𝐫𝐞𝐚𝐭𝐞 𝐎𝐧𝐞 𝐋𝐢𝐤𝐞 𝐓𝐡𝐢𝐬:</b>
+» I will Create One Bot For You<b>
+» Contact Me @Kumarvalimaibot<b>"""
+    MANUELFILTER_TXT = """Help: <b>Filters</b>
 
-    HELP_TXT = """<b>Hᴇʏ {} Fʀɪᴇɴᴅ Hᴇʀᴇ Yᴏᴜʀ Bᴜᴛᴛᴏɴs 👇</b>"""
+- Filter is the feature were users can set automated replies for a particular keyword and Search Bot will respond whenever a keyword is found the message
 
-    PRIVATEBOT_TXT = """<b>Tʜᴀɴᴋs Fᴏʀ Aᴅᴅɪɴɢ Mᴇ
+<b>NOTE:</b>
+1. Animee_4uBot should have admin privillage.
+2. only admins can add filters in a chat.
+3. alert buttons have a limit of 64 characters.
 
-- ›› Mᴜsᴛ Aᴅᴅ Mᴇ Aᴅᴍɪɴ Tᴏ Wᴏʀᴋ Oɴ Tʜɪs Gʀᴏᴜᴘ
+<b>Commands and Usage:</b>
+• /filter - <code>add a filter in chat</code>
+• /filters - <code>list all the filters of a chat</code>
+• /del - <code>delete a specific filter in chat</code>
+• /delall - <code>delete the whole filters in a chat (chat owner only)</code>"""
+    BUTTON_TXT = """Help: <b>Buttons</b>
 
-- ›› Cʜᴀɴɢᴇ Sᴇᴛᴛɪɴɢ Fᴏʀ Uʀ Gʀᴏᴜᴘ Cʟɪᴄᴋ 👉 /connect
+- Search Bot Supports both url and alert inline buttons.
 
-- ›› I Wɪʟʟ Pʀᴏᴠɪᴅᴇ Mᴏᴠɪᴇs/Sᴇʀɪᴇs Dᴏɴ'ᴛ Wᴏʀʀʏ
+<b>NOTE:</b>
+1. Telegram will not allows you to send buttons without any content, so content is mandatory.
+2. Keanureeevs Bot supports buttons with any telegram media type.
+3. Buttons should be properly parsed as markdown format
 
-- ›› Eɴᴊᴏʏ !! Mᴏʀᴇ Iɴғᴏ Usᴇ Uɴᴅᴇʀ Bᴜᴛᴛᴏɴs</b>
-"""
+<b>URL buttons:</b>
+<code>[Button Text](buttonurl:https://t.me/Animee_4ubot)</code>
 
-    MODS_TXT = """I Hᴀᴠᴇ Mᴀɴʏ Fᴇᴀᴛᴜʀᴇs"""
+<b>Alert buttons:</b>
+<code>[Button Text](buttonalert:This is an alert message)</code>"""
+    AUTOFILTER_TXT = """Help: <b>Auto Filter</b>
 
-    PONGD_TXT = """Cʜᴇᴄᴋ Mʏ Pɪɴɢ Bʏ Cʟɪᴄᴋɪɴɢ 👉 /ping"""
+<b>NOTE:</b>
+1. Make me the admin of your channel if it's private.
+2. make sure that your channel does not contains camrips, porn and fake files.
+3. Forward the last message to me with quotes.
+ I'll add all the files in that channel to my db."""
+    CONNECTION_TXT = """Help: <b>Connections</b>
+
+- Used to connect bot to PM for managing filters 
+- it helps to avoid spamming in groups.
+
+<b>NOTE:</b>
+1. Only admins can add a connection.
+2. Send <code>/connect</code> for connecting me to ur PM
+
+<b>Commands and Usage:</b>
+• /connect  - <code>connect a particular chat to your PM</code>
+• /disconnect  - <code>disconnect from a chat</code>
+• /connections - <code>list all your connections</code>"""
+    EXTRAMOD_TXT = """Help: <b>Extra Modules</b>
+
+<b>NOTE:</b>
+these are the extra features of Search Bot
+
+<b>Commands and Usage:</b>
+• /id - <code>get id of a specified user.</code>
+• /info  - <code>get information about a user.</code>
+• /imdb  - <code>get the film information from IMDb source.</code>
+• /search  - <code>get the film information from various sources.</code>"""
+    ADMIN_TXT = """Help: <b>Admin mods</b>
+
+<b>NOTE:</b>
+This module only works for my admins
+
+<b>Commands and Usage:</b>
+• /logs - <code>to get the rescent errors</code>
+• /stats - <code>to get status of files in db.</code>
+• /delete - <code>to delete a specific file from db.</code>
+• /users - <code>to get list of my users and ids.</code>
+• /chats - <code>to get list of the my chats and ids </code>
+• /leave  - <code>to leave from a chat.</code>
+• /disable  -  <code>do disable a chat.</code>
+• /ban  - <code>to ban a user.</code>
+• /unban  - <code>to unban a user.</code>
+• /channel - <code>to get list of total connected channels</code>
+• /broadcast - <code>to broadcast a message to all users</code>"""
+    STATUS_TXT = """★ 𝚃𝙾𝚃𝙰𝙻 𝙵𝙸𝙻𝙴𝚂: <code>{}</code>
+★ 𝚃𝙾𝚃𝙰𝙻 𝚄𝚂𝙴𝚁𝚂: <code>{}</code>
+★ 𝚃𝙾𝚃𝙰𝙻 𝙲𝙷𝙰𝚃𝚂: <code>{}</code>
+★ 𝚄𝚂𝙴𝙳 𝚂𝚃𝙾𝚁𝙰𝙶𝙴: <code>{}</code> 𝙼𝚒𝙱
+★ 𝙵𝚁𝙴𝙴 𝚂𝚃𝙾𝚁𝙰𝙶𝙴: <code>{}</code> 𝙼𝚒𝙱
+
+★ Powered BY @Movies_arena_4u"""
+    LOG_TEXT_G = """#𝐍𝐞𝐰𝐆𝐫𝐨𝐮𝐩
     
-    PONG_TXT = """Cʜᴇᴄᴋ Mʏ Pɪɴɢ Bʏ Cʟɪᴄᴋɪɴɢ 👉 /ping"""
-
-    ABOUT_TXT = """<b>🤖 ᴍʏ ɴᴀᴍᴇ : <a href=https://t.me/Tamilanz_Auto_Filter_Bot>ᴍᴏᴠɪᴇs ғɪʟᴛᴇʀ ʙᴏᴛ</a>
-👨‍💻 ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/Sharathitsisme>sʜᴀʀᴀᴛʜ</a>
-📝 ʟᴀɴɢᴜᴀɢᴇ : ᴘʏʀᴏɢʀᴀᴍ
-📚 ꜰʀᴀᴍᴇᴡᴏʀᴋ : ᴘʏᴛʜᴏɴ 3
-📡 ʜᴏsᴛᴇᴅ ᴏɴ : ғʀᴇᴇ ʜᴏsᴛɪɴɢ
-📢 sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ : <a href=https://t.me/TamilanMoviesChat>ᴄʟɪᴄᴋ ʜᴇʀᴇ</a>
-🌟 Sᴏᴜʀᴄᴇ Cᴏᴅᴇ : <a href=https://github.com/TamilanBotsZ/PremiumFilter>ʀᴇᴩᴏ ʟɪɴᴋ</a></b>"""
-
-    SOURCES_TXT = """Tʜɪs Is Aɴ Oᴩᴇɴ-Sᴏᴜʀᴄᴇ Pʀᴏᴊᴇᴄᴛ Bʏ @Tamilan_BotsZ
-
-- 100﹪ Cᴏᴅᴇᴅ Bʏ <a href=https://t.me/SharathItsIsme>sʜᴀʀᴀᴛʜ</a>
-
-- & Rᴇᴩᴏ Lɪɴᴋ 👇 Hᴇʀᴇ"""
-
-    SOURCE_TXT = """Tʜɪs Is Aɴ Oᴩᴇɴ-Sᴏᴜʀᴄᴇ Pʀᴏᴊᴇᴄᴛ Bʏ @Tamilan_BotsZ</b>
-
-- 100﹪ Cᴏᴅᴇᴅ Bʏ <a href=https://t.me/SharathItsIsme>sʜᴀʀᴀᴛʜ</a></b>
-
-- Rᴇᴩᴏ Lɪɴᴋ 👇 Hᴇʀᴇ"""
-
-    FONT_TXT = """I Cᴀɴ Gᴇɴᴇʀᴀᴛᴇ Aᴛᴛʀᴀᴄᴛɪᴠᴇ Fᴏɴᴛs Fᴏʀ Yᴏᴜʀ Tᴇxᴛ Sᴇɴᴅ Lɪᴋᴇ Tʜɪs 👇
-
-ᴇɢ :- /font hi da"""
-
-    CARBON_TXT = """/carbon ﹛ ʏᴏᴜʀ ᴛᴇxᴛ ﹜
-
-ᴇɢ :- /carbon hi"""
-
-    SHARE_TXT = """/share ﹛ ʏᴏᴜʀ ᴛᴇxᴛ ﹜
-
-ᴇɢ :- /share hi da"""
-
-    VIDEO_TXT ="""Dᴏᴡɴʟᴏᴀᴅ Aɴʏ Yᴏᴜᴛᴜʙᴇ Vɪᴅᴇᴏ Fʀᴏᴍ Tʜᴇ Vɪᴅᴇᴏ Lɪɴᴋ
-
-• Hᴏᴡ Tᴏ Usᴇ
-• Tʏᴘᴇ /video 𝘈𝘯𝘥 (YᴏᴜTᴜʙᴇ Vɪᴅᴇᴏ Lɪɴᴋ)
-• Exᴀᴍᴘʟᴇ:
-• /video https://youtu.be/kB9TkCscX0"""
-
-    TELE_TXT = """▫️Hᴇʟᴘ: ▪️ Tᴇʟᴇɢʀᴀᴘʜ ▪️
-     Tᴇʟᴇɢʀᴀᴘʜ Lɪɴᴋ Gᴇɴᴇʀᴀᴛᴏʀ
-    Usᴀɢᴇ
-    🤧 /telegraph - Sᴇɴᴅ Mᴇ Pʜᴏᴛᴏ Oʀ Vɪᴅᴇᴏ Uɴᴅᴇʀ (5ᴍʙ)"""
-
-    MANUELFILTER_TXT = """<b>Hᴏᴡ Tᴏ Dᴏᴡɴʟᴏᴀᴅ Mᴏᴠɪᴇs / Sᴇʀɪᴇs Usɪɴɢ Tʜɪs Bᴏᴛ</b> 😌 🔋
-
-<b>Fɪʀsᴛ Jᴏɪɴ Tʜɪs Gʀᴏᴜᴩ » @TamilanMoviesChat</b>
-
-<b>Sᴇɴᴅ Yᴏᴜ Wᴀɴᴛ Mᴏᴠɪᴇs Oʀ Sᴇʀɪᴇs Nᴀᴍᴇ Wɪᴛʜ Cᴏʀʀᴇᴄᴛ Sᴩᴇʟʟɪɴɢ</b>
-
-<b>Aɴᴅ Bᴏᴛ Wɪʟʟ Sᴇɴᴅ Yᴏᴜ Asᴋᴇᴅ Fɪʟᴇ</b>
-
-<b>Hᴏᴡ Tᴏ Oᴩᴇɴ Bᴏᴛ Sᴇɴᴅᴇᴅ Fɪʟᴇ Lɪɴᴋ. » <a href=https://t.me/Sharath_Links/13>ᴛᴜᴛᴏʀɪᴀʟ</a>.﹤/b>"""
-
-    CONTACT_TXT = """<b>
-<b>»» ° Oɴʟʏ Cᴏɴᴛᴀᴄᴛ Fᴏʀ Pᴀɪᴅ Wᴏʀᴋs / Pʀᴏʙʟᴇᴍ / Dᴏᴜʙᴛ / Cᴏʟʟᴀʙ / Hᴇʟᴩ °</b>
-
-<b>»» Iғ U Cᴏɴᴛᴀᴄᴛ Mᴇ Sᴇᴇ Bᴇʟᴏᴡ Bᴜᴛᴛᴏɴs 😙</b>
+<b>᚛› 𝐆𝐫𝐨𝐮𝐩 ⪼ {}(<code>{}</code>)</b>
+<b>᚛› 𝐓𝐨𝐭𝐚𝐥 𝐌𝐞𝐦𝐛𝐞𝐫𝐬 ⪼ <code>{}</code></b>
+<b>᚛› 𝐀𝐝𝐝𝐞𝐝 𝐁𝐲 ⪼ {}</b>
 """
-
-    STATUS_TXT = """<b><u>Cᴜʀʀᴇɴᴛ Dᴀᴛᴀʙᴀsᴇ Sᴛᴀᴛᴜs</b></u>
+    LOG_TEXT_P = """#𝐍𝐞𝐰𝐔𝐬𝐞𝐫  
     
-<b>📑 ғɪʟᴇs sᴀᴠᴇᴅ: <code>{}</code>
-👩🏻‍💻 ᴜsᴇʀs: <code>{}</code>
-👥 ɢʀᴏᴜᴘs: <code>{}</code>
-🗂️ ᴏᴄᴄᴜᴘɪᴇᴅ: <code>{}</code>
-🗄️ ғʀᴇᴇ sᴛᴏʀᴀɢᴇ: <code>{}</code></b>
-"""
-    LOG_TEXT_G = """<b> #NewGroup
-👥 ɢʀᴏᴜᴘ 👥 = {}(<code>{}</code>)
-😇 ᴛᴏᴛᴀʟ ᴍᴇᴍʙᴇʀs 😇 = <code>{}</code>
-💌 ᴀᴅᴅᴇᴅ ʙʏ 💌 - {} </b>
-"""
-    LOG_TEXT_P = """<b> #NewUser
-ɪᴅ ♥️- <code>{}</code>
-ɴᴀᴍᴇ 💥- {} </b>
+<b>᚛› 𝐈𝐃 - <code>{}</code></b>
+<b>᚛› 𝐍𝐚𝐦𝐞 - {}</b>
 """
